@@ -15,3 +15,4 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/refresh', [AuthController::class, 'refresh']);
 
 Route::post('/crm-data-insert', [CRMController::class, 'createCRMRecord']);
+Route::post('/crm-data-get', [CRMController::class, 'getCRMRecord']);

@@ -90,13 +90,57 @@ class CRMController extends Controller
             $tempData['edge_id'] = Str::uuid()->toString();
             $tempData['source_id'] = $id;
             $tempData['destination_id'] = $edge['id'];
-            $tempData['source_label'] = $sourceLabel;
-            $tempData['destination_label'] = $edge['label'];
+            $tempData['source_label'] = strtolower($sourceLabel);
+            $tempData['destination_label'] = strtolower($edge['label']);
             $tempData['edge_label'] = $edge['edgeLabel'];
             $tempData['created_at'] = date('Y-m-d H:i:s');
             $tempData['updated_at'] = date('Y-m-d H:i:s');
             array_push($data, $tempData);
         }
         DB::table('edges')->insert($data);
+    }
+
+
+    public function getCRMRecord(Request $req)
+    {
+        DB::enableQueryLog();
+        $sourceLabel = strtolower($req->input('sourceLabel'));
+        $destinations = $req->input('destinations');
+        $sourceId = $req->input('sourceId');
+        $showSQL = $req->input('showSQL');
+        $data = [];
+
+        if (Schema::hasTable($sourceLabel) && !empty($destinations) && count($destinations) > 0) {
+
+            $data =  DB::table('edges')->select('edge_label', 'edge_id');
+            $data = $data->join($sourceLabel, "edges.source_id", "=", "{$sourceLabel}.id");
+            $fields = ["$sourceLabel.*"];
+
+            foreach ($destinations as $destination) {
+                if (Schema::hasTable(strtolower($destination['label'])) && !empty($destination['fields']) && count($destination['fields']) > 0) {
+                    $data = $data->join($destination['label'], "edges.destination_id", "=", "{$destination['label']}.id");
+
+                    foreach ($destination['fields'] as $field) {
+                        array_push($fields, "{$destination['label']}.$field as {$destination['label']}__$field");
+                    }
+                }
+            }
+
+            // $fieldNames = implode(", ", $fields);
+            // return $fieldNames;
+            $data = $data->select($fields);
+        } elseif (Schema::hasTable($sourceLabel)) {
+            $data =  DB::table($sourceLabel);
+        }
+
+        if (!empty($sourceId)) {
+            $data = $data->where("$sourceLabel.id", "=", $sourceId);
+        }
+
+        //    $tableWithWhere = $table->where()
+        if (isset($showSQL) && $showSQL == true) {
+            return $data->toSql();
+        }
+        return $data->get();
     }
 }
