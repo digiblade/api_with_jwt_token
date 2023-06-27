@@ -149,12 +149,13 @@ class CRMController extends Controller
             $data = [];
             if (Schema::hasTable(strtolower($sourceLabel))) {
                 $data =  DB::table(strtolower($sourceLabel));
+                $data = $data->where("isDeleted", "=", false);
+                if (isset($showSQL) && $showSQL == true) {
+                    return $data->toSql();
+                }
+            } else {
+                $dataSet[$sourceLabel] =  [];
             }
-            $data = $data->where("isDeleted", "=", false);
-            if (isset($showSQL) && $showSQL == true) {
-                return $data->toSql();
-            }
-            $dataSet[$sourceLabel] =  $data->get();
         }
 
         return $dataSet;
