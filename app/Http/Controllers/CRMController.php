@@ -144,9 +144,9 @@ class CRMController extends Controller
         DB::enableQueryLog();
         $sourceLabels = $req->input('sourceLabels');
         $showSQL = $req->input('showSQL');
-        $data = [];
         $dataSet = array();
         foreach ($sourceLabels as $sourceLabel) {
+            $data = [];
             if (Schema::hasTable(strtolower($sourceLabel))) {
                 $data =  DB::table(strtolower($sourceLabel));
             }
