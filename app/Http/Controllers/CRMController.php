@@ -147,8 +147,8 @@ class CRMController extends Controller
         $data = [];
         $dataSet = array();
         foreach ($sourceLabels as $sourceLabel) {
-            if (Schema::hasTable(strtolower($sourceLabels))) {
-                $data =  DB::table(strtolower($sourceLabels));
+            if (Schema::hasTable(strtolower($sourceLabel))) {
+                $data =  DB::table(strtolower($sourceLabel));
             }
             $data = $data->where("isDeleted", "=", false);
             if (isset($showSQL) && $showSQL == true) {
