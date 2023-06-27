@@ -16,3 +16,4 @@ Route::post('/refresh', [AuthController::class, 'refresh']);
 
 Route::post('/crm-data-insert', [CRMController::class, 'createCRMRecord']);
 Route::post('/crm-data-get', [CRMController::class, 'getCRMRecord']);
+Route::post('/crm-multi-label-data-get', [CRMController::class, 'getCRMRecordWithMultiLabel']);
