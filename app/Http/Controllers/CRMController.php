@@ -136,7 +136,7 @@ class CRMController extends Controller
         if (!empty($sourceId)) {
             $data = $data->where("$sourceLabel.id", "=", $sourceId);
         }
-
+        $data = $data->where("isDeleted", "=", false);
         //    $tableWithWhere = $table->where()
         if (isset($showSQL) && $showSQL == true) {
             return $data->toSql();
