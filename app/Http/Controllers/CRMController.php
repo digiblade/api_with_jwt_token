@@ -153,6 +153,7 @@ class CRMController extends Controller
                 if (isset($showSQL) && $showSQL == true) {
                     return $data->toSql();
                 }
+                $dataSet[$sourceLabel] =  $data->get();
             } else {
                 $dataSet[$sourceLabel] =  [];
             }
