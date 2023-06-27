@@ -125,9 +125,6 @@ class CRMController extends Controller
                     }
                 }
             }
-
-            // $fieldNames = implode(", ", $fields);
-            // return $fieldNames;
             $data = $data->select($fields);
         } elseif (Schema::hasTable($sourceLabel)) {
             $data =  DB::table($sourceLabel);
@@ -137,10 +134,29 @@ class CRMController extends Controller
             $data = $data->where("$sourceLabel.id", "=", $sourceId);
         }
         $data = $data->where("isDeleted", "=", false);
-        //    $tableWithWhere = $table->where()
         if (isset($showSQL) && $showSQL == true) {
             return $data->toSql();
         }
         return $data->get();
+    }
+    public function getCRMRecordWithMultiLabel(Request $req)
+    {
+        DB::enableQueryLog();
+        $sourceLabels = $req->input('sourceLabels');
+        $showSQL = $req->input('showSQL');
+        $data = [];
+        $dataSet = array();
+        foreach ($sourceLabels as $sourceLabel) {
+            if (Schema::hasTable(strtolower($sourceLabels))) {
+                $data =  DB::table(strtolower($sourceLabels));
+            }
+            $data = $data->where("isDeleted", "=", false);
+            if (isset($showSQL) && $showSQL == true) {
+                return $data->toSql();
+            }
+            $dataSet[$sourceLabel] =  $data->get();
+        }
+
+        return $dataSet;
     }
 }
