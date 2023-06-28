@@ -126,14 +126,15 @@ class CRMController extends Controller
                 }
             }
             $data = $data->select($fields);
+            $data = $data->where("isDeleted", "=", false);
         } elseif (Schema::hasTable($sourceLabel)) {
             $data =  DB::table($sourceLabel);
+            $data = $data->where("isDeleted", "=", false);
         }
 
         if (!empty($sourceId)) {
             $data = $data->where("$sourceLabel.id", "=", $sourceId);
         }
-        $data = $data->where("isDeleted", "=", false);
         if (isset($showSQL) && $showSQL == true) {
             return $data->toSql();
         }
