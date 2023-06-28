@@ -138,7 +138,11 @@ class CRMController extends Controller
         if (isset($showSQL) && $showSQL == true) {
             return $data->toSql();
         }
-        return $data->get();
+        if (Schema::hasTable($sourceLabel)) {
+            return $data->get();
+        } else {
+            return $data;
+        }
     }
     public function getCRMRecordWithMultiLabel(Request $req)
     {
