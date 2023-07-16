@@ -8,11 +8,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
-class CRMController extends Controller
+class OpenCRMController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth:api']);
         header('Accept: application/json');
         header('Content-Type: application/json');
     }
